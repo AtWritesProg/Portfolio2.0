@@ -34,5 +34,3 @@ export const appPath = (id: AppId) => `~/atherva/${id}`;
 
 export const isAppId = (value: unknown): value is AppId =>
   typeof value === "string" && (APP_IDS as readonly string[]).includes(value);
-
-export const DEFAULT_APP: AppId = "about";

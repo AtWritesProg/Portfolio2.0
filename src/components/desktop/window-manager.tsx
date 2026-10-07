@@ -10,7 +10,7 @@ import {
   useRef,
   type ReactNode,
 } from "react";
-import { DEFAULT_APP, isAppId, type AppId } from "@/lib/apps";
+import { isAppId, type AppId } from "@/lib/apps";
 import { COMPACT_QUERY, useMediaQuery } from "@/lib/use-media-query";
 
 export interface Point {
@@ -90,7 +90,8 @@ interface WindowManager {
 
 const WindowManagerContext = createContext<WindowManager | null>(null);
 
-const initialState: State = { order: [DEFAULT_APP], minimized: [], positions: {} };
+// The desktop starts empty; visitors open apps themselves.
+const initialState: State = { order: [], minimized: [], positions: {} };
 
 export function WindowManagerProvider({ children }: { children: ReactNode }) {
   const [state, dispatch] = useReducer(reducer, initialState);
@@ -128,11 +129,11 @@ export function WindowManagerProvider({ children }: { children: ReactNode }) {
   const visible = state.order.filter((id) => !state.minimized.includes(id));
   const activeId = visible.at(-1) ?? null;
 
-  // Deep link: ?open=<app> replaces the default window on load. Read from
+  // Deep link: ?open=<app> opens that window on load. Read from
   // window.location after hydration so the page stays statically rendered.
   useEffect(() => {
     const requested = new URLSearchParams(window.location.search).get("open");
-    if (isAppId(requested) && requested !== DEFAULT_APP) {
+    if (isAppId(requested)) {
       dispatch({ type: "open", id: requested, single: true });
     }
   }, []);

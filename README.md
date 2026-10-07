@@ -30,8 +30,9 @@ pnpm lint
 - A small window manager (`components/desktop/window-manager.tsx`, React
   context + reducer) tracks open windows in z-order, minimized windows and
   drag positions.
-- About opens on first load. `?open=<app>` opens a different app instead,
-  and the URL follows the active window so any view can be shared.
+- The site opens on an empty desktop (name, icons, sticky note).
+  `?open=<app>` opens that app on load, and the URL follows the active
+  window so any view can be shared.
 - Desktop (768px and up): windows cascade, drag by the title bar, focus on
   click, minimize to the taskbar. Below 768px: windows are full width, one
   at a time, no dragging.

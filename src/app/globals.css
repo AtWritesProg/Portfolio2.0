@@ -1,0 +1,149 @@
+@import "tailwindcss";
+
+:root {
+  /* Desk: warm grid paper */
+  --desk: #efebdf;
+  --grid-minor: #e0d9c7;
+  --grid-major: #d3c9b1;
+
+  /* Ink and surfaces */
+  --ink: #1d1c1a;
+  --ink-soft: #57524a;
+  --surface: #fffcf5;
+  --chrome: #e4ddcb;
+  --chrome-dark: #c9c0aa;
+
+  /* Accents */
+  --rust: #b4441c;
+  --on-rust: #fff6e8;
+  --manila: #e9b949;
+  --manila-dark: #cf9a2c;
+  --moss: #3f6b4f;
+  --sticky: #f6d55c;
+
+  /* Terminal */
+  --term: #1d1c1a;
+  --term-fg: #e8e2d0;
+  --term-dim: #a59d8b;
+  --term-path: #9fc7a8;
+
+  --taskbar-h: 3.25rem;
+}
+
+@theme inline {
+  --color-desk: var(--desk);
+  --color-ink: var(--ink);
+  --color-ink-soft: var(--ink-soft);
+  --color-surface: var(--surface);
+  --color-chrome: var(--chrome);
+  --color-chrome-dark: var(--chrome-dark);
+  --color-rust: var(--rust);
+  --color-on-rust: var(--on-rust);
+  --color-manila: var(--manila);
+  --color-manila-dark: var(--manila-dark);
+  --color-moss: var(--moss);
+  --color-sticky: var(--sticky);
+  --color-term: var(--term);
+  --color-term-fg: var(--term-fg);
+  --color-term-dim: var(--term-dim);
+  --color-term-path: var(--term-path);
+  --font-sans: var(--font-sans);
+  --font-mono: var(--font-mono);
+  --font-pixel: var(--font-pixel);
+  --font-note: var(--font-note);
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  background-color: var(--desk);
+  color: var(--ink);
+  font-family: var(--font-sans), system-ui, -apple-system, sans-serif;
+  font-size: 1rem;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Grid paper drawn with SVG tiles: 24px minor cells, 120px major cells */
+.grid-paper {
+  background-color: var(--desk);
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cpath d='M120 0V120H0' fill='none' stroke='%23d3c9b1' stroke-width='1'/%3E%3C/svg%3E"),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24'%3E%3Cpath d='M24 0V24H0' fill='none' stroke='%23e0d9c7' stroke-width='1'/%3E%3C/svg%3E");
+  background-position: -1px -1px;
+}
+
+:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 2px;
+}
+
+::selection {
+  background: var(--sticky);
+  color: var(--ink);
+}
+
+/* Hard offset shadow for drawn icons (no blur) */
+.icon-shadow {
+  filter: drop-shadow(2px 2px 0 var(--ink));
+}
+
+/*
+ * Window placement. Compact: full width above the taskbar. Desktop: a
+ * cascade keyed by --i (app index), clamped inside the desk; dragging then
+ * applies a transform offset on top of this base position.
+ */
+.window-frame {
+  position: fixed;
+  inset: 0 0 var(--taskbar-h) 0;
+}
+
+@media (min-width: 768px) {
+  .window-frame {
+    --ww: min(var(--w), calc(100% - 2rem));
+    position: absolute;
+    inset: auto;
+    width: var(--ww);
+    left: clamp(
+      1rem,
+      calc(50% - var(--ww) / 2 + var(--i) * 28px),
+      calc(100% - var(--ww) - 1rem)
+    );
+    top: calc(1.5rem + var(--i) * 1.25rem);
+    max-height: calc(100% - 3rem - var(--i) * 1.25rem);
+  }
+}
+
+.retro-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: var(--ink-soft) var(--chrome);
+}
+
+@keyframes caret-blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+.caret {
+  animation: caret-blink 1s step-end infinite;
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .caret {
+    animation: none;
+  }
+}
